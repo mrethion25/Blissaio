@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Suggestion from "../suggestion/Suggestion";
 import useSearch from "@/src/hooks/useSearch";
 import { useNavigate } from "react-router-dom";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react"; // ✅ Added
 
 function WebSearch() {
     const navigate = useNavigate();
@@ -27,49 +28,66 @@ function WebSearch() {
     };
 
     return (
-        <div className="flex items-center relative w-[450px] max-[600px]:w-fit">
-            <input
-                type="text"
-                className="w-full px-5 py-2 bg-[#2a2a2a]/75 text-white rounded-lg focus:outline-none transition-colors placeholder-white/50 max-[600px]:hidden"
-                placeholder="Search anime..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => {
-                    setTimeout(() => {
-                        const isInsideSuggestionBox = suggestionRefs.current.some(
-                            (ref) => ref && ref.contains(document.activeElement),
-                        );
-                        if (!isInsideSuggestionBox) {
-                            setIsFocused(false);
-                        }
-                    }, 100);
-                }}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        if (searchValue.trim()) {
+        <div className="flex items-center gap-3 relative">
+
+            {/* SEARCH BAR */}
+            <div className="relative w-[450px] max-[600px]:w-fit">
+                <input
+                    type="text"
+                    className="w-full px-5 py-2 bg-[#2a2a2a]/75 text-white rounded-lg focus:outline-none transition-colors placeholder-white/50 max-[600px]:hidden"
+                    placeholder="Search anime..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => {
+                        setTimeout(() => {
+                            const isInsideSuggestionBox = suggestionRefs.current.some(
+                                (ref) => ref && ref.contains(document.activeElement),
+                            );
+                            if (!isInsideSuggestionBox) setIsFocused(false);
+                        }, 100);
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && searchValue.trim()) {
                             navigate(`/search?keyword=${encodeURIComponent(searchValue)}`);
                         }
-                    }
-                }}
-            />
-            <button
-                className="absolute right-4 text-white/50 hover:text-white transition-colors max-[600px]:static max-[600px]:bg-transparent focus:outline-none max-[600px]:p-0"
-                onClick={handleSearchClick}
-            >
-                <FontAwesomeIcon
-                    icon={faMagnifyingGlass}
-                    className="text-lg max-[600px]:text-white max-[600px]:text-2xl max-[575px]:text-xl max-[600px]:mt-[7px]"
+                    }}
                 />
-            </button>
-            {searchValue.trim() && isFocused && (
-                <div
-                    ref={addSuggestionRef}
-                    className="absolute z-[100000] top-full w-full"
+
+                <button
+                    className="absolute right-4 text-white/50 hover:text-white transition-colors max-[600px]:static max-[600px]:bg-transparent focus:outline-none max-[600px]:p-0"
+                    onClick={handleSearchClick}
                 >
-                    <Suggestion keyword={debouncedValue} className="w-full" />
-                </div>
-            )}
+                    <FontAwesomeIcon
+                        icon={faMagnifyingGlass}
+                        className="text-lg max-[600px]:text-white max-[600px]:text-2xl max-[575px]:text-xl max-[600px]:mt-[7px]"
+                    />
+                </button>
+
+                {/* SUGGESTIONS */}
+                {searchValue.trim() && isFocused && (
+                    <div
+                        ref={addSuggestionRef}
+                        className="absolute z-[100000] top-full w-full"
+                    >
+                        <Suggestion keyword={debouncedValue} className="w-full" />
+                    </div>
+                )}
+            </div>
+
+            {/* SIGN IN / USER BUTTON */}
+            <SignedOut>
+                <a href="/login">
+                    <button className="bg-purple-600 px-4 py-2 rounded-md text-white">
+                        Sign In
+                    </button>
+                </a>
+            </SignedOut>
+
+            <SignedIn>
+                <UserButton afterSignOutUrl="/home" />
+            </SignedIn>
+
         </div>
     );
 }
