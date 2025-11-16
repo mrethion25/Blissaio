@@ -1,83 +1,121 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/react';
-import { HomeInfoProvider } from "./context/HomeInfoContext";
-import Home from "./pages/Home/Home";
-import AnimeInfo from "./pages/animeInfo/AnimeInfo";
-import Navbar from "./components/navbar/Navbar";
-import Footer from "./components/footer/Footer";
-import Error from "./components/error/Error";
-import Category from "./pages/category/Category";
-import AtoZ from "./pages/a2z/AtoZ";
-import { azRoute, categoryRoutes } from "./utils/category.utils";
-import "./App.css";
-import Search from "./pages/search/Search";
-import Watch from "./pages/watch/Watch";
-import Producer from "./components/producer/Producer";
-import SplashScreen from "./components/splashscreen/SplashScreen";
-import Terms from "./pages/terms/Terms";
-import DMCA from "./pages/dmca/DMCA";
-import Contact from "./pages/contact/Contact";
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
-function App() {
-  const location = useLocation();
+import Home from "./pages/Home";
 
-  // Scroll to top on location change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
+import { SignIn, SignUp, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
-  // Check if the current route is for the splash screen
-  const isSplashScreen = location.pathname === "/";
+import Account from "./pages/Account";
+import Watchlist from "./pages/Watchlist";
+import Favorites from "./pages/Favorites";
+import AnimeDetail from "./pages/AnimeDetail";
 
-  return (
-    <HomeInfoProvider>
-      <div className="app-container px-4 lg:px-10">
-        <main className="content max-w-[2048px] mx-auto w-full">
-          {!isSplashScreen && <Navbar />}
-          <Routes>
-            <Route path="/" element={<SplashScreen />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/:id" element={<AnimeInfo />} />
-            <Route path="/watch/:id" element={<Watch />} />
-            <Route path="/random" element={<AnimeInfo random={true} />} />
-            <Route path="/404-not-found-page" element={<Error error="404" />} />
-            <Route path="/error-page" element={<Error />} />
-            <Route path="/terms-of-service" element={<Terms />} />
-            <Route path="/dmca" element={<DMCA />} />
-            <Route path="/contact" element={<Contact />} />
-            {/* Render category routes */}
-            {categoryRoutes.map((path) => (
-              <Route
-                key={path}
-                path={`/${path}`}
-                element={
-                  <Category path={path} label={path.split("-").join(" ")} />
-                }
-              />
-            ))}
-            {/* Render A to Z routes */}
-            {azRoute.map((path) => (
-              <Route
-                key={path}
-                path={`/${path}`}
-                element={<AtoZ path={path} />}
-              />
-            ))}
-            <Route path="/producer/:id" element={<Producer />} />
-            <Route path="/search" element={<Search />} />
-            {/* Catch-all route for 404 */}
-            <Route path="*" element={<Error error="404" />} />
-          </Routes>
-          {!isSplashScreen && <Footer />}
-        </main>
-        <Analytics />
-        <SpeedInsights />
-      </div>
-    </HomeInfoProvider>
-  );
+function AnimeDetailPage(){
+  const { useParams } = require("react-router-dom");
+  const { id } = useParams();
+  return <AnimeDetail id={id} />;
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-900 text-white">
+
+        <nav className="px-4 py-3 flex items-center justify-between bg-gray-800">
+          <Link to="/home" className="font-bold text-xl">BLINIME</Link>
+
+          <div className="flex items-center gap-4">
+            <Link to="/home">Home</Link>
+            <Link to="/account">Account</Link>
+            <Link to="/watchlist">Watchlist</Link>
+            <Link to="/favorites">Favorites</Link>
+
+            <SignedOut>
+              <Link to="/login">
+                <button className="bg-purple-600 px-3 py-1 rounded">Sign In</button>
+              </Link>
+            </SignedOut>
+
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+
+          <Route path="/login" element={<SignIn routing="path" path="/login" />} />
+          <Route path="/signup" element={<SignUp routing="path" path="/signup" />} />
+
+          <Route path="/account" element={<Account />} />
+          <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/anime/:id" element={<AnimeDetailPage />} />
+        </Routes>
+
+      </div>
+    </BrowserRouter>
+  );
+}import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
+import Home from "./pages/Home";
+
+import { SignIn, SignUp, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+
+import Account from "./pages/Account";
+import Watchlist from "./pages/Watchlist";
+import Favorites from "./pages/Favorites";
+import AnimeDetail from "./pages/AnimeDetail";
+
+function AnimeDetailPage(){
+  const { useParams } = require("react-router-dom");
+  const { id } = useParams();
+  return <AnimeDetail id={id} />;
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-900 text-white">
+
+        <nav className="px-4 py-3 flex items-center justify-between bg-gray-800">
+          <Link to="/home" className="font-bold text-xl">BLINIME</Link>
+
+          <div className="flex items-center gap-4">
+            <Link to="/home">Home</Link>
+            <Link to="/account">Account</Link>
+            <Link to="/watchlist">Watchlist</Link>
+            <Link to="/favorites">Favorites</Link>
+
+            <SignedOut>
+              <Link to="/login">
+                <button className="bg-purple-600 px-3 py-1 rounded">Sign In</button>
+              </Link>
+            </SignedOut>
+
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+
+          <Route path="/login" element={<SignIn routing="path" path="/login" />} />
+          <Route path="/signup" element={<SignUp routing="path" path="/signup" />} />
+
+          <Route path="/account" element={<Account />} />
+          <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/anime/:id" element={<AnimeDetailPage />} />
+        </Routes>
+
+      </div>
+    </BrowserRouter>
+  );
+      }
