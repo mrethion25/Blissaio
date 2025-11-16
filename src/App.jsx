@@ -11,10 +11,10 @@ import {
   UserButton
 } from "@clerk/clerk-react";
 
-import Account from "./pages/Account";
-import Watchlist from "./pages/Watchlist";
-import Favorites from "./pages/Favorites";
-import AnimeDetail from "./pages/AnimeDetail";
+import Account from "./pages/Account.jsx";
+import Watchlist from "./pages/Watchlist.jsx";
+import Favorites from "./pages/Favorites.jsx";
+import AnimeDetail from "./pages/AnimeDetail.jsx";
 
 function AnimeDetailPage() {
   const { useParams } = require("react-router-dom");
