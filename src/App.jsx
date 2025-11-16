@@ -39,7 +39,9 @@ export default function App() {
 
             <SignedOut>
               <Link to="/login">
-                <button className="bg-purple-600 px-3 py-1 rounded">Sign In</button>
+                <button className="bg-purple-600 px-3 py-1 rounded">
+                  Sign In
+                </button>
               </Link>
             </SignedOut>
 
@@ -66,4 +68,4 @@ export default function App() {
       </div>
     </BrowserRouter>
   );
-          }
+            }
