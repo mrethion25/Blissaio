@@ -4,6 +4,8 @@ import { faMagnifyingGlass, faRandom } from '@fortawesome/free-solid-svg-icons';
 import useSearch from '@/src/hooks/useSearch';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react"; // ✅ ADDED
+
 function MobileSearch({ onClose }) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -34,7 +36,10 @@ function MobileSearch({ onClose }) {
 
     return (
         <div className="w-full p-4 flex flex-col gap-4">
+
             <div className="flex items-center gap-2">
+
+                {/* SEARCH INPUT */}
                 <div className="relative flex-1">
                     <input
                         type="text"
@@ -54,21 +59,19 @@ function MobileSearch({ onClose }) {
                             }, 100);
                         }}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleSearchClick();
-                            }
+                            if (e.key === 'Enter') handleSearchClick();
                         }}
                     />
+
                     <button 
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors"
                         onClick={handleSearchClick}
                     >
-                        <FontAwesomeIcon
-                            icon={faMagnifyingGlass}
-                            className="text-lg"
-                        />
+                        <FontAwesomeIcon icon={faMagnifyingGlass} className="text-lg" />
                     </button>
                 </div>
+
+                {/* RANDOM BUTTON */}
                 <Link
                     to={location.pathname === "/random" ? "#" : "/random"}
                     onClick={handleRandomClick}
@@ -77,7 +80,26 @@ function MobileSearch({ onClose }) {
                 >
                     <FontAwesomeIcon icon={faRandom} className="text-lg" />
                 </Link>
+
+                {/* SIGN IN / USER BUTTON (MOBILE) */}
+                <SignedOut>
+                    <Link 
+                        to="/login"
+                        className="p-[10px] bg-purple-600 text-white rounded-lg flex items-center justify-center shrink-0"
+                    >
+                        Sign In
+                    </Link>
+                </SignedOut>
+
+                <SignedIn>
+                    <div className="shrink-0">
+                        <UserButton afterSignOutUrl="/home" />
+                    </div>
+                </SignedIn>
+
             </div>
+
+            {/* SUGGESTIONS */}
             {searchValue.trim() && isFocused && (
                 <div
                     ref={addSuggestionRef}
@@ -90,6 +112,7 @@ function MobileSearch({ onClose }) {
                     />
                 </div>
             )}
+
         </div>
     );
 }
