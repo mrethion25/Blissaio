@@ -11,6 +11,10 @@
     "host": "vite --host"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.0.0",                   // ✅ ADDED
+    "recharts": "^2.5.0",                            // ✅ ADDED
+    "date-fns": "^2.30.0",                           // ✅ ADDED
+
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
@@ -53,4 +57,4 @@
     "tailwindcss": "^3.4.13",
     "vite": "^5.4.1"
   }
-}
+  }
